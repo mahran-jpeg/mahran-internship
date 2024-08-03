@@ -8,7 +8,7 @@ import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import { Navigation, Pagination } from "swiper/modules";
 import Skeleton from "../ui/Skeleton";
-import CollectionCard from "../collection/CollectionCard";
+import Card from "../collection/Card";
 
 export default function NewCollections() {
   const [newCollections, setNewCollections] = useState([]);
@@ -45,6 +45,11 @@ export default function NewCollections() {
         <div className="row">
           <h2 className="new-collections__title">New Collections</h2>
           <Swiper
+           style={{
+            "--swiper-navigation-color": "#000",
+            "--swiper-navigation-size": "25px",
+
+          }}
             key={swiperKey}
             breakpoints={{
               0: {
@@ -77,17 +82,18 @@ export default function NewCollections() {
             loop
             navigation
             slidesPerView={6}
+            
           >
             <div className="new-collections__body">
               {loading
                 ? new Array(8).fill(0).map((_, index) => (
                     <SwiperSlide key={index}>
-                      <CollectionCard loading={true} />
+                      <Card loading={true} />
                     </SwiperSlide>
                   ))
                 : newCollections.slice(0, 10).map((nft, index) => (
                     <SwiperSlide key={index}>
-                      <CollectionCard
+                      <Card
                         loading={false}
                         collection={nft}
                         link={`/collection/${nft.collectionId}`}
