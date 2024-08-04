@@ -5,7 +5,7 @@ import axios from 'axios';
 import Skeleton from'../ui/Skeleton'
 
 export default function Trending() {
-  const [nftData, setNftData] = useState([]);
+  const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(false);
 
   async function fetchData() {
@@ -15,12 +15,12 @@ export default function Trending() {
         "https://remote-internship-api-production.up.railway.app/trendingNFTs"
       );
       if (data === "False") {
-        setNftData([]);
+        setTrending([]);
       } else {
-        setNftData(data.data);
+        setTrending(data.data);
       }
     } catch (error) {
-      setNftData([]);
+      setTrending([]);
       console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
@@ -96,23 +96,23 @@ export default function Trending() {
                 <div className="trending-column__header__price">Volume</div>
               </div>
               <div className="trending-column__body">
-                {loading ? renderSkeletons() : nftData.slice(0, 5).map((nft, index) => (
+                {loading ? renderSkeletons() : trending.slice(0, 5).map((trend, index) => (
                   <Link
                     to="/collection"
                     key={index}
                     className="trending-collection"
                   >
-                    <div className="trending-collection__rank">{nft.rank}</div>
+                    <div className="trending-collection__rank">{trend.rank}</div>
                     <div className="trending-collection__collection">
                       <figure className="trending-collection__img__wrapper">
                         <img
-                          src={nft.imageLink}
+                          src={trend.imageLink}
                           alt=""
                           className="trending-collection__img"
                         />
                       </figure>
                       <div className="trending-collection__name">
-                        {nft?.title}
+                        {trend.title}
                       </div>
                       <img
                         src={VerifiedIcon}
@@ -121,12 +121,12 @@ export default function Trending() {
                     </div>
                     <div className="trending-collection__price">
                       <span className="trending-collection__price__span">
-                        {Math.round(Number(nft.floor) * 100) / 100} ETH
+                        {Math.round(Number(trending.floor) * 100) / 100} ETH
                       </span>
                     </div>
                     <div className="trending-collection__volume">
                       <span className="trending-collection__volume__span">
-                        {nft.totalVolume} ETH
+                        {trending.totalVolume} ETH
                       </span>
                     </div>
                   </Link>
@@ -143,23 +143,23 @@ export default function Trending() {
                 <div className="trending-column__header__price">Volume</div>
               </div>
               <div className="trending-column__body">
-                {loading ? renderSkeletons() : nftData.slice(5, 10).map((nft, index) => (
+                {loading ? renderSkeletons() : trending.slice(5, 10).map((trend, index) => (
                   <Link
                     to="/collection"
                     key={index + 5}
                     className="trending-collection"
                   >
-                    <div className="trending-collection__rank">{nft.rank}</div>
+                    <div className="trending-collection__rank">{trend.rank}</div>
                     <div className="trending-collection__collection">
                       <figure className="trending-collection__img__wrapper">
                         <img
-                          src={nft.imageLink}
+                          src={trend.imageLink}
                           alt=""
                           className="trending-collection__img"
                         />
                       </figure>
                       <div className="trending-collection__name">
-                        {nft?.title}
+                        {trend.title}
                       </div>
                       <img
                         src={VerifiedIcon}
@@ -168,12 +168,12 @@ export default function Trending() {
                     </div>
                     <div className="trending-collection__price">
                       <span className="trending-collection__price__span">
-                        {Math.round(Number(nft.floor) * 100) / 100} ETH
+                        {Math.round(Number(trend.floor) * 100) / 100} ETH
                       </span>
                     </div>
                     <div className="trending-collection__volume">
                       <span className="trending-collection__volume__span">
-                        {nft.totalVolume} ETH
+                        {trend.totalVolume} ETH
                       </span>
                     </div>
                   </Link>
