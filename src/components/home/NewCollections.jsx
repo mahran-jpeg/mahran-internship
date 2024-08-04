@@ -40,7 +40,7 @@ export default function NewCollections() {
   }, []);
 
   return (
-    <section id="new-collections" data-aos="fade-up">
+    <section id="new-collections" >
       <div className="container">
         <div className="row">
           <h2 className="new-collections__title">New Collections</h2>
