@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Skeleton from "../../src/components/ui/Skeleton";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import CollectionCard from "../components/collection/Card"
 export default function CollectionsPage() {
   const [collectionsPage, setCollectionsPage] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -80,7 +80,7 @@ export default function CollectionsPage() {
             ? renderSkeletons()
             : collectionsPage.slice(0, visibleCount).map((collection, index) => (
                 <div className="collection-column" key={index}>
-                  <Link to={`/collection/${collection.id}`} className="collection">
+                  <Link to={`/collection/`} className="collection">
                     <div className="collections-page__image--wrapper">
                       <img
                         src={collection.imageLink}

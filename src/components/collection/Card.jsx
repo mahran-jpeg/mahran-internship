@@ -2,8 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Skeleton from "../ui/Skeleton";
 
-function CollectionCard({ loading, collection, link, index }) {
-
+function CollectionCard({ loading, collection = {}, link, index }) {
+  
+  const { logo, imageLink, title, floor, totalVolume } = collection;
 
   return loading ? (
     <Link to={`/collection/`} key={index} className="collection">
@@ -32,29 +33,25 @@ function CollectionCard({ loading, collection, link, index }) {
       </div>
     </Link>
   ) : (
-    <Link
-      to={link}
-      key={index}
-      className="collection"
-    >
+    <Link to={link} key={index} className="collection">
       <img
-        src={collection.logo || collection.imageLink}
+        src={logo || imageLink}
         alt=""
         className="collection__img"
       />
       <div className="collection__info">
-        <h3 className="collection__name">{collection.title}</h3>
+        <h3 className="collection__name">{title}</h3>
         <div className="collection__stats">
           <div className="collection__stat">
             <span className="collection__stat__label">Floor</span>
             <span className="collection__stat__data">
-              {parseFloat(collection.floor).toFixed(2)} ETH
+              {parseFloat(floor).toFixed(2)} ETH
             </span>
           </div>
           <div className="collection__stat">
             <span className="collection__stat__label">Total Volume</span>
             <span className="collection__stat__data">
-              {collection.totalVolume} ETH
+              {totalVolume} ETH
             </span>
           </div>
         </div>

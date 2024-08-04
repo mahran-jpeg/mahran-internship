@@ -98,7 +98,7 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(0, 5).map((trend, index) => (
                   <Link
-                    to="/collection"
+                    to="/collection/"
                     key={index}
                     className="trending-collection"
                   >
@@ -121,12 +121,12 @@ export default function Trending() {
                     </div>
                     <div className="trending-collection__price">
                       <span className="trending-collection__price__span">
-                        {Math.round(Number(trending.floor) * 100) / 100} ETH
+                        {Math.round(Number(trend.floor) * 100) / 100} ETH
                       </span>
                     </div>
                     <div className="trending-collection__volume">
                       <span className="trending-collection__volume__span">
-                        {trending.totalVolume} ETH
+                        {trend.totalVolume} ETH
                       </span>
                     </div>
                   </Link>
@@ -145,7 +145,7 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(5, 10).map((trend, index) => (
                   <Link
-                    to="/collection"
+                    to="/collection/"
                     key={index + 5}
                     className="trending-collection"
                   >
@@ -186,4 +186,3 @@ export default function Trending() {
     </section>
   );
 }
-

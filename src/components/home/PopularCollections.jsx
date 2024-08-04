@@ -94,7 +94,7 @@ export default function PopularCollections() {
                       <Card
                         loading={false}
                         collection={nft}
-                        link={`/collection/${nft.collectionId}`}
+                        link={`/collection/`}
                       />
                     </SwiperSlide>
                   ))}
