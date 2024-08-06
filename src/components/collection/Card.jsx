@@ -7,7 +7,7 @@ function CollectionCard({ loading, collection = {}, link, index }) {
   const { logo, imageLink, title, floor, totalVolume } = collection;
 
   return loading ? (
-    <Link to={`/collection/`} key={index} className="collection">
+    <Link to={`/collection/${collection.id}`} key={index} className="collection">
       <div className="collection__img">
         <Skeleton width="100%" height="100%" borderRadius={0} />
       </div>
