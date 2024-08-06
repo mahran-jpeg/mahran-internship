@@ -9,17 +9,17 @@ import "swiper/css/scrollbar";
 import { Navigation, Pagination } from "swiper/modules";
 import Skeleton from "../ui/Skeleton";
 import Card from "../collection/Card";
-
+import { useParams } from "react-router-dom";
 export default function PopularCollections() {
   const [popularCollection, setPopularCollection] = useState([]);
   const [loading, setLoading] = useState(false);
   const [swiperKey, setSwiperKey] = useState(0);
-
+const {id} = useParams()
   async function fetchData() {
     setLoading(true);
     try {
       const { data } = await axios.get(
-        "https://remote-internship-api-production.up.railway.app/popularCollections"
+        `https://remote-internship-api-production.up.railway.app/popularCollections`
       );
       if (data === "False") {
         setPopularCollection([]);
@@ -86,15 +86,17 @@ export default function PopularCollections() {
               {loading
                 ? new Array(8).fill(0).map((_, index) => (
                     <SwiperSlide key={index}>
-                      <Card loading={true} />
+                      <Card loading={true}
+                      collection={popularCollection} 
+                       />
                     </SwiperSlide>
                   ))
-                : popularCollection.slice(0, 10).map((nft, index) => (
+                : popularCollection.slice(0, 10).map((collection, index) => (
                     <SwiperSlide key={index}>
                       <Card
                         loading={false}
-                        collection={nft}
-                        link={`/collection/`}
+                        collection={collection}
+                        link={`/collection/${collection?.collectionId}`}
                       />
                     </SwiperSlide>
                   ))}

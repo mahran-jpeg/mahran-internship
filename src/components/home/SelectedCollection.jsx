@@ -3,10 +3,11 @@ import VerifiedIcon from "../../assets/verified.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Skeleton from "../ui/Skeleton";
+import { useParams } from "react-router-dom";
 export default function SelectedCollection() {
   const [selection, setSelection] = useState({});
   const [loading, setLoading] = useState(false);
-
+const {id} = useParams()
   async function fetchData() {
     setLoading(true)
     try {
@@ -67,7 +68,7 @@ export default function SelectedCollection() {
      <div className="selected-collection__details">
        {selection.amountOfItems} · {selection.floorPrice} ETH
      </div>
-     <Link to={`/collection/`} className="selected-collection__button">
+     <Link to={`/collection/${selection.collectionId}`} className="selected-collection__button">
        <div className="green-pulse"></div>
        View Collection
      </Link>

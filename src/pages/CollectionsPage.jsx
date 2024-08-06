@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import Skeleton from "../../src/components/ui/Skeleton";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import CollectionCard from "../components/collection/Card"
+import { useParams } from "react-router-dom";
+import CollectionCard from "../components/collection/Card";
 export default function CollectionsPage() {
   const [collectionsPage, setCollectionsPage] = useState([]);
   const [loading, setLoading] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
-
+  const { id } = useParams();
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchData();
@@ -68,7 +69,7 @@ export default function CollectionsPage() {
   };
 
   const loadMore = () => {
-    setVisibleCount(prevCount => prevCount + 6);
+    setVisibleCount((prevCount) => prevCount + 6);
   };
 
   return (
@@ -78,36 +79,46 @@ export default function CollectionsPage() {
         <div className="collections__body">
           {loading
             ? renderSkeletons()
-            : collectionsPage.slice(0, visibleCount).map((collection, index) => (
-                <div className="collection-column" key={index}>
-                  <Link to={`/collection/`} className="collection">
-                    <div className="collections-page__image--wrapper">
-                      <img
-                        src={collection.imageLink}
-                        alt={collection.title}
-                        className="collection__img"
-                      />
-                    </div>
-                    <div className="collection__info">
-                      <h3 className="collection__name">{collection.title}</h3>
-                      <div className="collection__stats">
-                        <div className="collection__stat">
-                          <span className="collection__stat__label">Floor</span>
-                          <span className="collection__stat__data">
-                            {Math.round(Number(collection.floor) * 100) / 100} ETH
-                          </span>
-                        </div>
-                        <div className="collection__stat">
-                          <span className="collection__stat__label">Total Volume</span>
-                          <span className="collection__stat__data">
-                            {collection.totalVolume} ETH
-                          </span>
+            : collectionsPage
+                .slice(0, visibleCount)
+                .map((collection, index) => (
+                  <div className="collection-column" key={index}>
+                    <Link
+                      to={`/collection/${collection.id}`}
+                      className="collection"
+                    >
+                      <div className="collections-page__image--wrapper">
+                        <img
+                          src={collection.imageLink}
+                          alt={collection.title}
+                          className="collection__img"
+                        />
+                      </div>
+                      <div className="collection__info">
+                        <h3 className="collection__name">{collection.title}</h3>
+                        <div className="collection__stats">
+                          <div className="collection__stat">
+                            <span className="collection__stat__label">
+                              Floor
+                            </span>
+                            <span className="collection__stat__data">
+                              {Math.round(Number(collection.floor) * 100) / 100}{" "}
+                              ETH
+                            </span>
+                          </div>
+                          <div className="collection__stat">
+                            <span className="collection__stat__label">
+                              Total Volume
+                            </span>
+                            <span className="collection__stat__data">
+                              {collection.totalVolume} ETH
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
-              ))}
+                    </Link>
+                  </div>
+                ))}
         </div>
         {visibleCount < collectionsPage.length && (
           <button className="collections-page__button" onClick={loadMore}>

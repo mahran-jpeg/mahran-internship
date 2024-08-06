@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Skeleton from'../ui/Skeleton'
-
 export default function Trending() {
   const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -98,8 +97,9 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(0, 5).map((trend, index) => (
                   <Link
-                    to="/collection/"
-                    key={index}
+                  trend={trend}
+                  to={`/collection/${trend.collectionId}`}
+                  key={index}
                     className="trending-collection"
                   >
                     <div className="trending-collection__rank">{trend.rank}</div>
@@ -145,9 +145,11 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(5, 10).map((trend, index) => (
                   <Link
-                    to="/collection/"
                     key={index + 5}
                     className="trending-collection"
+                    trend={trend}
+                    to={`/collection/${trend.collectionId}`}
+               
                   >
                     <div className="trending-collection__rank">{trend.rank}</div>
                     <div className="trending-collection__collection">

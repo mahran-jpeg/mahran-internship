@@ -9,12 +9,12 @@ import "swiper/css/scrollbar";
 import { Navigation, Pagination } from "swiper/modules";
 import Skeleton from "../ui/Skeleton";
 import Card from "../collection/Card";
-
+import { useParams } from "react-router-dom";
 export default function NewCollections() {
   const [newCollections, setNewCollections] = useState([]);
   const [loading, setLoading] = useState(false);
   const [swiperKey, setSwiperKey] = useState(0);
-
+const {id} = useParams()
   async function fetchData() {
     setLoading(true);
     try {
@@ -34,7 +34,6 @@ export default function NewCollections() {
       setLoading(false);
     }
   }
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -88,15 +87,18 @@ export default function NewCollections() {
               {loading
                 ? new Array(8).fill(0).map((_, index) => (
                     <SwiperSlide key={index}>
-                      <Card loading={true} />
+                      <Card loading={true}
+                      collection={newCollections} 
+
+                      />
                     </SwiperSlide>
                   ))
-                : newCollections.slice(0, 10).map((nft, index) => (
+                : newCollections.slice(0, 10).map((collection, index) => (
                     <SwiperSlide key={index}>
                       <Card
                         loading={false}
-                        collection={nft}
-                        link={`/collection/`}
+                        collection={collection}
+                        link={`/collection/${collection?.collectionId}`}
                       />
                     </SwiperSlide>
                   ))}
