@@ -5,15 +5,57 @@ import {
   faShoppingBag,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import RecommendedItems from "../components/item/RecommendedItems";
 import { faEthereum } from "@fortawesome/free-brands-svg-icons";
 import { Link } from "react-router-dom";
-
+import { useParams } from "react-router-dom";
+import axios from "axios";
 export default function ItemPage() {
+  const { id } = useParams();
+  const {collectionId} = useParams();
+  const [itemDetails , setItemDetails] = useState({});
+  const [recommendedItems, setRecomendedItems] = useState([])
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  async function getData() {
+    try {
+      const  {data}  = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/item/${id}`
+      );
+      if (data === "False") {
+        setItemDetails([]);
+      } else {
+     setItemDetails(data.data);
+
+      }
+    } catch (error) {
+      setItemDetails({});
+      console.error("Error fetching data:", error);
+    }
+  }
+
+  async function fetchData() {
+    try {
+      const  {data}  = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/item/${collectionId}`
+      );
+      if (data === "False") {
+        setRecomendedItems([]);
+      } else {
+       setRecomendedItems(data.data)
+      }
+    } catch (error) {
+      setItemDetails({});
+      console.error("Error fetching data:", error);
+    }
+  } 
+  useEffect(()=>{
+    getData()
+  },[id])
+  
 
   return (
     <>
@@ -32,31 +74,30 @@ export default function ItemPage() {
                       icon={faHeart}
                       className="item-page__img__icon"
                     />
-                    <span className="item-page__img__likes__text">11</span>
+                    <span className="item-page__img__likes__text">{itemDetails.favorites}</span>
                   </div>
                 </div>
                 <img
-                  src="https://i.seadn.io/gcs/files/0a085499e0f3800321618af356c5d36b.png?auto=format&dpr=1&w=1000"
-                  alt=""
+                  src={itemDetails.imageLink}
                   className="item-page__img"
                 />
               </figure>
             </div>
             <div className="item-page__right">
               <Link
-                to={"/collection"}
+                to={`/collection/${itemDetails.collectionId}`}
                 className="item-page__collection light-blue"
               >
-                Meebits
+                {itemDetails.collection}
               </Link>
-              <h1 className="item-page__name">Meebit #18854</h1>
+              <h1 className="item-page__name"> {itemDetails.collection} {itemDetails.title}</h1>
               <span className="item-page__owner">
                 Owned by{" "}
                 <Link
                   to={"/user"}
                   className="light-blue item-page__owner__link"
                 >
-                  shilpixels
+                 {itemDetails.owner}
                 </Link>
               </span>
               <div className="item-page__details">
@@ -65,21 +106,23 @@ export default function ItemPage() {
                     icon={faEye}
                     className="item-page__detail__icon"
                   />
-                  <span className="item-page__detail__text">324 views</span>
+                  <span className="item-page__detail__text">{itemDetails.views} views</span>
                 </div>
                 <div className="item-page__detail">
                   <FontAwesomeIcon
                     icon={faHeart}
                     className="item-page__detail__icon"
                   />
-                  <span className="item-page__detail__text">11 favorites</span>
+                  <span className="item-page__detail__text">{itemDetails.favorites} favorites</span>
                 </div>
                 <div className="item-page__detail">
                   <FontAwesomeIcon
                     icon={faShapes}
                     className="item-page__detail__icon"
                   />
-                  <span className="item-page__detail__text">PFPs</span>
+                  <span className="item-page__detail__text">
+                    {itemDetails.category}
+                  </span>
                 </div>
               </div>
               <div className="item-page__sale">
@@ -90,9 +133,9 @@ export default function ItemPage() {
                 <div className="item-page__sale__body">
                   <span className="item-page__sale__label">Current price</span>
                   <div className="item-page__sale__price">
-                    <span className="item-page__sale__price__eth">100 ETH</span>
+                    <span className="item-page__sale__price__eth">{itemDetails.ethPrice} ETH</span>
                     <span className="item-page__sale__price__dollars">
-                      $314,884.00
+                     {itemDetails.usdPrice}
                     </span>
                   </div>
                   <div className="item-page__sale__buttons">
@@ -116,7 +159,7 @@ export default function ItemPage() {
         </div>
       </section>
 
-      <RecommendedItems />
+      <RecommendedItems itemDetails ={itemDetails}/>
     </>
   );
 }
