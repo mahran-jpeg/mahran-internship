@@ -27,6 +27,21 @@ const {id} = useParams()
     }
   }
 
+  async function getUserData(){
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+       setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
+      console.error("Error fetching data:", error);
+    }
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -57,7 +72,7 @@ const {id} = useParams()
        className="selected-collection__logo"
      />
      <h1 className="selected-collection__title">{selection.title}</h1>
-     <Link to={`/user`} className="selected-collection__author">
+     <Link to={`/user/${selection.creatorId}`} className="selected-collection__author">
        By {selection.creator}
        <img
          src={VerifiedIcon}
