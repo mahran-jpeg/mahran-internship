@@ -18,6 +18,7 @@ export default function ItemPage() {
   const [itemDetails, setItemDetails] = useState({});
   const [recommendedItems, setRecomendedItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({});
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -53,6 +54,21 @@ export default function ItemPage() {
       }
     } catch (error) {
       setItemDetails({});
+      console.error("Error fetching data:", error);
+    }
+  }
+  async function getUserData() {
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+        setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
       console.error("Error fetching data:", error);
     }
   }
@@ -120,10 +136,9 @@ export default function ItemPage() {
             <div className="item-page__sale__body">
               <span className="item-page__sale__label">
                 <Skeleton width="100px" height="14px" borderRadius="4px" />
-              </span>
-              {' '}
+              </span>{" "}
               <div className="item-page__sale__price">
-              <Skeleton width="210px" height="20px" borderRadius="4px" />
+                <Skeleton width="210px" height="20px" borderRadius="4px" />
                 {/* <span className="item-page__sale__price__eth">
                   <Skeleton width="20px" height="30px" borderRadius="4px" />
                 </span>
@@ -185,7 +200,7 @@ export default function ItemPage() {
                   <span className="item-page__owner">
                     Owned by{" "}
                     <Link
-                      to="/user"
+                      to={`/user/${itemDetails.ownerId}`}
                       className="light-blue item-page__owner__link"
                     >
                       {itemDetails.owner}

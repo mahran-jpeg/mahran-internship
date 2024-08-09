@@ -1,8 +1,47 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Skeleton from "../ui/Skeleton";
-
+import { useState,useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 export default function CollectionHeader({ selectedCollection, loading }) {
+  const [itemDetails, setItemDetails] = useState({});
+  const [userData , setUserData] = useState({})
+  const {id} = useParams()
+  async function getData() {
+  
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/item/${id}`
+      );
+      if (data === "False") {
+        setItemDetails([]);
+      } else {
+        setItemDetails(data.data);
+      }
+    } catch (error) {
+      setItemDetails({});
+      console.error("Error fetching data:", error);
+    } 
+  }
+  async function getUserData(){
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+       setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
+      console.error("Error fetching data:", error);
+    }
+  }
+  useEffect(()=>{
+    getData()
+  },[])
   return loading ? (
     <header id="collection-header" style={{ height: '300px', position: 'relative' }}>
       <Skeleton width="100%" height="100%" borderRadius="0px" style={{ display: 'block' }} />
@@ -29,7 +68,7 @@ export default function CollectionHeader({ selectedCollection, loading }) {
             <div className="collection-header__name">
               {selectedCollection.title}
             </div>
-            <Link to="/user" className="collection-header__author">
+            <Link to={`/user/${selectedCollection.creatorId}`}className="collection-header__author">
               {selectedCollection.creator}
             </Link>
           </div>
