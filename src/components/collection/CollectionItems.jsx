@@ -74,18 +74,28 @@ export default function CollectionItems({
   useEffect(() => {
     getData();
   }, []);
+ 
   return (
     <section id="collection-items">
       <div className="row collection-items__row">
         <div className="collection-items__header">
           <div className="collection-items__header__left">
-            <span className="collection-items__header__live">
-              <div className="green-pulse"></div>
-              Live
-            </span>
-            <span className="collection-items__header__results">
-              {selectedItems.length} results
-            </span>
+          {loading ? (
+    <Skeleton width="120px" height="16px" borderRadius="4px" />
+  ) : (
+    <span className="collection-items__header__live">
+      <div className="green-pulse"></div>
+      Live
+    </span>
+  )}
+
+  {loading ? (
+    <Skeleton width="120px" height="16px" borderRadius="4px" />
+  ) : (
+    <span className="collection-items__header__results">
+      {selectedItems.length} results
+    </span>
+  )}
           </div>
           <select
             value={sort}
