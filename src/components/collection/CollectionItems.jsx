@@ -46,9 +46,7 @@ export default function CollectionItems({
               <Skeleton width="150px" height="20px" borderRadius="4px" />
             </span>
           </div>
-          <div className="item__see-more">
-            <Skeleton width="150px" height="30px" borderRadius="4px" />
-          </div>
+
         </div>
      ) ));
   };
