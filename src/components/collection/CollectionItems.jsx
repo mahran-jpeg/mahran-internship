@@ -6,16 +6,20 @@ import { Link } from "react-router-dom";
 import Skeleton from "../ui/Skeleton";
 import PropTypes from "prop-types";
 
-export default function CollectionItems({ selectedItems,loading,setSelectedItems}) {
-  const [sort ,setSort] = useState('')
+export default function CollectionItems({
+  selectedItems,
+  loading,
+  setSelectedItems,
+}) {
+  const [sort, setSort] = useState("");
 
-  function sortItems(){
-  if(sort === "HIGH_TO_LOW"){
-setSelectedItems(selectedItems.slice().sort((a,b)=>b.price - a.price))
-  } else if (sort === 'LOW_TO_HIGH'){
-    setSelectedItems(selectedItems.slice().sort((a,b)=>a.price - b.price))
+  function sortItems() {
+    if (sort === "HIGH_TO_LOW") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => b.price - a.price));
+    } else if (sort === "LOW_TO_HIGH") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => a.price - b.price));
+    }
   }
-}
   const [visibleCount, setVisibleCount] = useState(11);
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 6);
@@ -45,72 +49,81 @@ setSelectedItems(selectedItems.slice().sort((a,b)=>b.price - a.price))
         </div>
       ));
   };
-  useEffect(()=>{
-sortItems()
-  },[sort])
+  useEffect(() => {
+    sortItems();
+  }, [sort]);
   return (
     <section id="collection-items">
       <div className="row collection-items__row">
         <div className="collection-items__header">
           <div className="collection-items__header__left">
-            <span className="collection-items__header__live">
-              <div className="green-pulse"></div>
-              Live
-            </span>
-            <span className="collection-items__header__results">
-             {selectedItems.length}{' '}results
-            </span>
+            {loading ? (
+              <Skeleton width="120px" height="16px" borderRadius="4px" />
+            ) : (
+              <span className="collection-items__header__live">
+                <div className="green-pulse"></div>
+                Live
+              </span>
+            )}
+
+            {loading ? (
+              <Skeleton width="120px" height="16px" borderRadius="4px" />
+            ) : (
+              <span className="collection-items__header__results">
+                {selectedItems.length} results
+              </span>
+            )}
           </div>
-          <select 
-          value={sort}
-          className="collection-items__header__sort"
-          onChange={(event)=>{setSort(event.target.value)}}
+          <select
+            value={sort}
+            className="collection-items__header__sort"
+            onChange={(event) => {
+              setSort(event.target.value);
+            }}
           >
-            <option 
-            value="" 
-            default
-            selected
-            disabled
-            >
+            <option value="" default selected disabled>
               Default
             </option>
-            <option 
-            value="HIGH_TO_LOW">
-              Price high to low</option>
-            <option value="LOW_TO_HIGH">
-              Price low to high</option>
+            <option value="HIGH_TO_LOW">Price high to low</option>
+            <option value="LOW_TO_HIGH">Price low to high</option>
           </select>
         </div>
         <div className="collection-items__body">
           <div className="collection-items__body">
-            { loading ? renderSkeletons() :selectedItems.slice(0, visibleCount).map((item) => (
-              <div className="item-column" key={item.itemId}>
-                <Link to={`/item/${item.itemId}`} className="item">
-                  <figure className="item__img__wrapper">
-                    <img
-                      src={item.imageLink}
-                      alt={item.title}
-                      className="item__img"
-                    />
-                  </figure>
-                  <div className="item__details">
-                    <span className="item__details__name">{item.title}</span>
-                    <span className="item__details__price">
-                      {item.price} ETH
-                    </span>
-                    <span className="item__details__last-sale">
-                      Last sale: {item.lastSale} ETH
-                    </span>
+            {loading
+              ? renderSkeletons()
+              : selectedItems.slice(0, visibleCount).map((item) => (
+                  <div className="item-column" key={item.itemId}>
+                    <Link to={`/item/${item.itemId}`} className="item">
+                      <figure className="item__img__wrapper">
+                        <img
+                          src={item.imageLink}
+                          alt={item.title}
+                          className="item__img"
+                        />
+                      </figure>
+                      <div className="item__details">
+                        <span className="item__details__name">
+                          {item.title}
+                        </span>
+                        <span className="item__details__price">
+                          {item.price} ETH
+                        </span>
+                        <span className="item__details__last-sale">
+                          Last sale: {item.lastSale} ETH
+                        </span>
+                      </div>
+                      <div className="item__see-more">
+                        <button className="item__see-more__button">
+                          See More
+                        </button>
+                        <div className="item__see-more__icon">
+                          <FontAwesomeIcon icon={faShoppingBag} />
+                        </div>
+                      </div>
+                    </Link>
                   </div>
-                  <div className="item__see-more">
-                    <button className="item__see-more__button">See More</button>
-                    <div className="item__see-more__icon">
-                      <FontAwesomeIcon icon={faShoppingBag} />
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                ))}
           </div>
         </div>
       </div>
