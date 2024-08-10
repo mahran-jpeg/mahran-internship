@@ -1,3 +1,4 @@
+
 import { faEye, faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faShapes,
@@ -18,10 +19,33 @@ export default function ItemPage() {
   const [itemDetails, setItemDetails] = useState({});
   const [recommendedItems, setRecomendedItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [userData, setUserData] = useState({});
+  const [timeLeft, setTimeLeft] = useState('');
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const difference = itemDetails.expiryDate - now;
 
+      if (difference > 0) {
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+      } else {
+        setTimeLeft('Expired');
+      }
+    };
+
+    if (itemDetails.expiryDate) {
+      calculateTimeLeft();
+      const timer = setInterval(calculateTimeLeft, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [itemDetails.expiryDate]);
   async function getData() {
     setLoading(true);
     try {
@@ -53,6 +77,21 @@ export default function ItemPage() {
       }
     } catch (error) {
       setItemDetails({});
+      console.error("Error fetching data:", error);
+    }
+  }
+  async function getUserData() {
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+        setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
       console.error("Error fetching data:", error);
     }
   }
@@ -120,16 +159,9 @@ export default function ItemPage() {
             <div className="item-page__sale__body">
               <span className="item-page__sale__label">
                 <Skeleton width="100px" height="14px" borderRadius="4px" />
-              </span>
-              {' '}
+              </span>{" "}
               <div className="item-page__sale__price">
-              <Skeleton width="210px" height="20px" borderRadius="4px" />
-                {/* <span className="item-page__sale__price__eth">
-                  <Skeleton width="20px" height="30px" borderRadius="4px" />
-                </span>
-                <span className="item-page__sale__price__dollars">
-                  <Skeleton width="20px" height="30px" borderRadius="4px" />
-                </span> */}
+                <Skeleton width="210px" height="20px" borderRadius="4px" />
               </div>
               <div className="item-page__sale__buttons">
                 <Skeleton width="100%" height="40px" borderRadius="4px" />
@@ -185,7 +217,7 @@ export default function ItemPage() {
                   <span className="item-page__owner">
                     Owned by{" "}
                     <Link
-                      to="/user"
+                      to={`/user/${itemDetails.ownerId}`}
                       className="light-blue item-page__owner__link"
                     >
                       {itemDetails.owner}
@@ -223,7 +255,7 @@ export default function ItemPage() {
                   <div className="item-page__sale">
                     <div className="item-page__sale__header">
                       <div className="green-pulse"></div>
-                      <span>Sale ends in 2h 30m 56s</span>
+                      <span>Sale ends in {timeLeft}</span>
                     </div>
                     <div className="item-page__sale__body">
                       <span className="item-page__sale__label">
@@ -264,3 +296,4 @@ export default function ItemPage() {
     </>
   );
 }
+
