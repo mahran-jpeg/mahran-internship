@@ -27,7 +27,8 @@ export default function CollectionItems({
     setVisibleCount((prevCount) => prevCount + 6);
   };
   const renderSkeletons = () => {
-    return Array(12)
+    return (
+      Array(12)
       .fill(0)
       .map((_, index) => (
         <div className="item-column" key={index}>
@@ -49,7 +50,7 @@ export default function CollectionItems({
             <Skeleton width="150px" height="30px" borderRadius="4px" />
           </div>
         </div>
-      ));
+     ) ));
   };
   useEffect(() => {
     sortItems();
