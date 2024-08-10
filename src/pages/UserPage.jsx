@@ -53,10 +53,11 @@ export default function UserPage() {
     return (
       <>
         <header
-          style={{ backgroundImage: `url(${userData.imageLink})` }}
+          style={{ backgroundImage: `url(${userData.imageLink})`}}
           id="user-header"
         >
-          <Skeleton width="100%" height="100%" borderRadius={0} />
+          <Skeleton width="100%" height="100%" borderRadius={0}
+           />
         </header>
 
         <section id="user-info">
