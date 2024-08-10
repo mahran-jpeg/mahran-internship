@@ -1,4 +1,4 @@
-import { faEye } from "@fortawesome/free-regular-svg-icons";
+
 import { faShoppingBag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -6,11 +6,13 @@ import { Link } from "react-router-dom";
 import Skeleton from "../ui/Skeleton";
 import PropTypes from "prop-types";
 
+
 export default function CollectionItems({
   selectedItems,
   loading,
   setSelectedItems,
 }) {
+  const [visibleCount, setVisibleCount] = useState(11);
   const [sort, setSort] = useState("");
 
   function sortItems() {
@@ -20,7 +22,7 @@ export default function CollectionItems({
       setSelectedItems(selectedItems.slice().sort((a, b) => a.price - b.price));
     }
   }
-  const [visibleCount, setVisibleCount] = useState(11);
+  
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 6);
   };
@@ -48,7 +50,7 @@ export default function CollectionItems({
           </div>
         </div>
 
-        
+
       ));
   };
   useEffect(() => {
