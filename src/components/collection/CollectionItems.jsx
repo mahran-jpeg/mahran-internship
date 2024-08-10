@@ -47,6 +47,8 @@ export default function CollectionItems({
             <Skeleton width="150px" height="30px" borderRadius="4px" />
           </div>
         </div>
+
+        
       ));
   };
   useEffect(() => {
