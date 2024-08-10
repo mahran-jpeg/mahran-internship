@@ -1,3 +1,4 @@
+
 import { faEye, faHeart } from "@fortawesome/free-regular-svg-icons";
 import {
   faShapes,
@@ -19,10 +20,32 @@ export default function ItemPage() {
   const [recommendedItems, setRecomendedItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({});
+  const [timeLeft, setTimeLeft] = useState('');
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const difference = itemDetails.expiryDate - now;
 
+      if (difference > 0) {
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+        setTimeLeft(`${hours}h ${minutes}m ${seconds}s`);
+      } else {
+        setTimeLeft('Expired');
+      }
+    };
+
+    if (itemDetails.expiryDate) {
+      calculateTimeLeft();
+      const timer = setInterval(calculateTimeLeft, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [itemDetails.expiryDate]);
   async function getData() {
     setLoading(true);
     try {
@@ -139,12 +162,6 @@ export default function ItemPage() {
               </span>{" "}
               <div className="item-page__sale__price">
                 <Skeleton width="210px" height="20px" borderRadius="4px" />
-                {/* <span className="item-page__sale__price__eth">
-                  <Skeleton width="20px" height="30px" borderRadius="4px" />
-                </span>
-                <span className="item-page__sale__price__dollars">
-                  <Skeleton width="20px" height="30px" borderRadius="4px" />
-                </span> */}
               </div>
               <div className="item-page__sale__buttons">
                 <Skeleton width="100%" height="40px" borderRadius="4px" />
@@ -238,7 +255,7 @@ export default function ItemPage() {
                   <div className="item-page__sale">
                     <div className="item-page__sale__header">
                       <div className="green-pulse"></div>
-                      <span>Sale ends in 2h 30m 56s</span>
+                      <span>Sale ends in {timeLeft}</span>
                     </div>
                     <div className="item-page__sale__body">
                       <span className="item-page__sale__label">
