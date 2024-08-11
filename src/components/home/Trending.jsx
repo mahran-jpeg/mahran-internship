@@ -5,9 +5,7 @@ import axios from 'axios';
 import Skeleton from'../ui/Skeleton'
 import AOS from 'aos';
 import 'aos/dist/aos.css';
-AOS.init();import AOS from 'aos';
-import 'aos/dist/aos.css'; 
-AOS.init();
+
 export default function Trending() {
   const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(false);
