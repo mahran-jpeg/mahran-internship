@@ -3,7 +3,9 @@ import { Link } from "react-router-dom";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Skeleton from'../ui/Skeleton'
-
+import AOS from 'aos';
+import 'aos/dist/aos.css'; 
+AOS.init();
 export default function Trending() {
   const [trending, setTrending] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -76,7 +78,7 @@ export default function Trending() {
   };
 
   return (
-    <section id="trending">
+    <section id="trending" data-aos="fade-up">
       <div className="container">
         <div className="row trending__row">
           <div className="trending__header">
