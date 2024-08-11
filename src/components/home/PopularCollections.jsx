@@ -9,6 +9,9 @@ import "swiper/css/scrollbar";
 import { Navigation, Pagination } from "swiper/modules";
 import Skeleton from "../ui/Skeleton";
 import Card from "../collection/Card";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init();
 import { useParams } from "react-router-dom";
 export default function PopularCollections() {
   const [popularCollection, setPopularCollection] = useState([]);
@@ -40,7 +43,7 @@ const {id} = useParams()
   }, []);
 
   return (
-    <section id="popular-collections">
+    <section id="popular-collections" data-aos="fade-up" data-aos-duration="600">
       <div className="container">
         <div className="row">
           <h2 className="popular-collections__title">Popular Collections</h2>

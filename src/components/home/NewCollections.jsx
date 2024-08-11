@@ -10,6 +10,9 @@ import { Navigation, Pagination } from "swiper/modules";
 import Skeleton from "../ui/Skeleton";
 import Card from "../collection/Card";
 import { useParams } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init();
 export default function NewCollections() {
   const [newCollections, setNewCollections] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -39,7 +42,7 @@ const {id} = useParams()
   }, []);
 
   return (
-    <section id="new-collections" >
+    <section id="new-collections" data-aos="fade-up" data-aos-duration="600">
       <div className="container">
         <div className="row">
           <h2 className="new-collections__title">New Collections</h2>
@@ -83,7 +86,7 @@ const {id} = useParams()
             slidesPerView={6}
             
           >
-            <div className="new-collections__body">
+            <div className="new-collections__body" data-aos="fade-up" data-aos-duration="600">
               {loading
                 ? new Array(8).fill(0).map((_, index) => (
                     <SwiperSlide key={index}>
