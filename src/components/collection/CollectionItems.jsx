@@ -2,17 +2,26 @@
 import { faShoppingBag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useAsyncError } from "react-router-dom";
 import Skeleton from "../ui/Skeleton";
 import PropTypes from "prop-types";
-
-
-
+import axios from "axios";
+import { useParams } from "react-router-dom";
 export default function CollectionItems({
   selectedItems,
   loading,
   setSelectedItems,
 }) {
+  const { id } = useParams();
+  const [sort, setSort] = useState("");
+  const [itemDetails, setItemDetails] = useState({});
+  function sortItems() {
+    if (sort === "HIGH_TO_LOW") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => b.price - a.price));
+    } else if (sort === "LOW_TO_HIGH") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => a.price - b.price));
+    }
+  }
   const [visibleCount, setVisibleCount] = useState(11);
   const [sort, setSort] = useState("");
 
@@ -28,7 +37,8 @@ export default function CollectionItems({
     setVisibleCount((prevCount) => prevCount + 6);
   };
   const renderSkeletons = () => {
-    return Array(12)
+    return (
+      Array(12)
       .fill(0)
       .map((_, index) => (
         <div className="item-column" key={index}>
@@ -46,38 +56,25 @@ export default function CollectionItems({
               <Skeleton width="150px" height="20px" borderRadius="4px" />
             </span>
           </div>
-          <div className="item__see-more">
-            <Skeleton width="150px" height="30px" borderRadius="4px" />
-          </div>
+
         </div>
-
-
       ));
   };
-  useEffect(() => {
-    sortItems();
-  }, [sort]);
+  useEffect(()=>{
+sortItems()
+  },[sort])
   return (
     <section id="collection-items">
       <div className="row collection-items__row">
         <div className="collection-items__header">
           <div className="collection-items__header__left">
-            {loading ? (
-              <Skeleton width="120px" height="16px" borderRadius="4px" />
-            ) : (
-              <span className="collection-items__header__live">
-                <div className="green-pulse"></div>
-                Live
-              </span>
-            )}
-
-            {loading ? (
-              <Skeleton width="120px" height="16px" borderRadius="4px" />
-            ) : (
-              <span className="collection-items__header__results">
-                {selectedItems.length} results
-              </span>
-            )}
+            <span className="collection-items__header__live">
+              <div className="green-pulse"></div>
+              Live
+            </span>
+            <span className="collection-items__header__results">
+             {selectedItems.length}{' '}results
+            </span>
           </div>
           <select
             value={sort}
