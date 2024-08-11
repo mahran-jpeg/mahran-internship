@@ -3,29 +3,45 @@ import VerifiedIcon from "../../assets/verified.png";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Skeleton from "../ui/Skeleton";
+import { useParams } from "react-router-dom";
 export default function SelectedCollection() {
-  const [nftData, setNftData] = useState({});
+  const [selection, setSelection] = useState({});
   const [loading, setLoading] = useState(false);
-
+const {id} = useParams()
   async function fetchData() {
     setLoading(true)
     try {
       const { data } = await axios.get(
         "https://remote-internship-api-production.up.railway.app/selectedCollection"
       );
-      setNftData(data.data);
-      if (nftData === "False") {
-   setNftData({})
+      setSelection(data.data);
+      if (selection === "False") {
+   setSelection({})
       }
      
     } catch (error) {
-      setNftData(false)
+      setSelection(false)
       console.error("Error fetching data:", error);
     } finally{
       setLoading(false)
     }
   }
 
+  async function getUserData(){
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+       setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
+      console.error("Error fetching data:", error);
+    }
+  }
   useEffect(() => {
     fetchData();
   }, []);
@@ -45,19 +61,19 @@ export default function SelectedCollection() {
      muted
      loop
      playsInline
-     poster={nftData.thumbnail}
-     src={nftData.videoLink}
+     poster={selection.thumbnail}
+     src={selection.videoLink}
      className="selected-collection__bg"
    />
    <div className="selected-collection__description">
      <img
-       src={nftData.logo}
+       src={selection.logo}
        alt=""
        className="selected-collection__logo"
      />
-     <h1 className="selected-collection__title">{nftData.title}</h1>
-     <Link to={`/user`} className="selected-collection__author">
-       By {nftData.creator}
+     <h1 className="selected-collection__title">{selection.title}</h1>
+     <Link to={`/user/${selection.creatorId}`} className="selected-collection__author">
+       By {selection.creator}
        <img
          src={VerifiedIcon}
          className="selected-collection__author__verified"
@@ -65,9 +81,9 @@ export default function SelectedCollection() {
        />
      </Link>
      <div className="selected-collection__details">
-       {nftData.amountOfItems} · {nftData.floorPrice} ETH
+       {selection.amountOfItems} · {selection.floorPrice} ETH
      </div>
-     <Link to={`/collection/`} className="selected-collection__button">
+     <Link to={`/collection/${selection.collectionId}`} className="selected-collection__button">
        <div className="green-pulse"></div>
        View Collection
      </Link>

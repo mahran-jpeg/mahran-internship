@@ -4,6 +4,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Skeleton from'../ui/Skeleton'
 import AOS from 'aos';
+import 'aos/dist/aos.css';
+AOS.init();import AOS from 'aos';
 import 'aos/dist/aos.css'; 
 AOS.init();
 export default function Trending() {
@@ -81,13 +83,17 @@ export default function Trending() {
     <section id="trending" data-aos="fade-up">
       <div className="container">
         <div className="row trending__row">
-          <div className="trending__header">
+          <div className="trending__header"
+          data-aos="fade-up" data-aos-duration="600"
+          >
             <h2 className="trending__header__title">Trending NFTs</h2>
             <Link className="trending__header__button" to="/collections">
               View All
             </Link>
           </div>
-          <div className="trending__body">
+          <div className="trending__body"
+           data-aos="fade-up" data-aos-duration="600"
+          >
             <div className="trending-column">
               <div className="trending-column__header">
                 <div className="trending-column__header__rank">#</div>
@@ -100,8 +106,9 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(0, 5).map((trend, index) => (
                   <Link
-                    to="/collection"
-                    key={index}
+                  trend={trend}
+                  to={`/collection/${trend.collectionId}`}
+                  key={index}
                     className="trending-collection"
                   >
                     <div className="trending-collection__rank">{trend.rank}</div>
@@ -123,12 +130,12 @@ export default function Trending() {
                     </div>
                     <div className="trending-collection__price">
                       <span className="trending-collection__price__span">
-                        {Math.round(Number(trending.floor) * 100) / 100} ETH
+                        {Math.round(Number(trend.floor) * 100) / 100} ETH
                       </span>
                     </div>
                     <div className="trending-collection__volume">
                       <span className="trending-collection__volume__span">
-                        {trending.totalVolume} ETH
+                        {trend.totalVolume} ETH
                       </span>
                     </div>
                   </Link>
@@ -147,9 +154,11 @@ export default function Trending() {
               <div className="trending-column__body">
                 {loading ? renderSkeletons() : trending.slice(5, 10).map((trend, index) => (
                   <Link
-                    to="/collection"
                     key={index + 5}
                     className="trending-collection"
+                    trend={trend}
+                    to={`/collection/${trend.collectionId}`}
+               
                   >
                     <div className="trending-collection__rank">{trend.rank}</div>
                     <div className="trending-collection__collection">
@@ -188,4 +197,3 @@ export default function Trending() {
     </section>
   );
 }
-

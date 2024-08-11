@@ -1,12 +1,59 @@
 import React from "react";
 import { Link } from "react-router-dom";
-
-export default function CollectionHeader() {
-  return (
+import Skeleton from "../ui/Skeleton";
+import { useState,useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
+export default function CollectionHeader({ selectedCollection, loading }) {
+  const [itemDetails, setItemDetails] = useState({});
+  const [userData , setUserData] = useState({})
+  const {id} = useParams()
+  async function getData() {
+  
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/item/${id}`
+      );
+      if (data === "False") {
+        setItemDetails([]);
+      } else {
+        setItemDetails(data.data);
+      }
+    } catch (error) {
+      setItemDetails({});
+      console.error("Error fetching data:", error);
+    } 
+  }
+  async function getUserData(){
+    try {
+      const { data } = await axios.get(
+        `https://remote-internship-api-production.up.railway.app/user/${id}`
+      );
+      if (data === "False") {
+       setUserData([]);
+      } else {
+        setUserData(data.data);
+      }
+    } catch (error) {
+      setUserData({});
+      console.error("Error fetching data:", error);
+    }
+  }
+  useEffect(()=>{
+    getData()
+  },[])
+  return loading ? (
+    <header id="collection-header" style={{ height: '300px', position: 'relative' }}>
+      <Skeleton width="100%" height="100%" borderRadius="0px" style={{ display: 'block' }} />
+    </header>
+  ) : (
     <header
       style={{
-        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.2)), 
-        url('https://i.seadn.io/gcs/files/cbeed39f76506b4baf71005d7127d0df.png?auto=format&dpr=1&w=1920')`,
+        backgroundImage: `linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.2)), url(${selectedCollection.imageLink})`,
+        height: '300px', 
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative'
       }}
       id="collection-header"
     >
@@ -14,18 +61,23 @@ export default function CollectionHeader() {
         <div className="collection-header__content">
           <div className="collection-header__left">
             <img
-              src="https://i.seadn.io/gcs/files/2d036c8c2bed042a1588622c3173677f.png?auto=format&dpr=1&w=256"
+              src={selectedCollection.logo}
               alt=""
               className="collection-header__img"
             />
-            <div className="collection-header__name">Meebits</div>
-            <Link to={'/user'} className="collection-header__author">C352B5</Link>
+            <div className="collection-header__name">
+              {selectedCollection.title}
+            </div>
+            <Link to={`/user/${selectedCollection.creatorId}`}className="collection-header__author">
+              {selectedCollection.creator}
+            </Link>
           </div>
           <div className="collection-header__right">
             <div className="collection-header__columns">
               <div className="collection-header__column">
                 <span className="collection-header__column__data">
-                  <span className="semibold">181,714</span> ETH
+                  <span className="semibold">{selectedCollection.totalVolume}</span>{" "}
+                  ETH
                 </span>
                 <span className="collection-header__column__label">
                   Total volume
@@ -33,7 +85,8 @@ export default function CollectionHeader() {
               </div>
               <div className="collection-header__column">
                 <span className="collection-header__column__data">
-                  <span className="semibold">0.55</span> ETH
+                  <span className="semibold">{selectedCollection.floor}</span>{" "}
+                  ETH
                 </span>
                 <span className="collection-header__column__label">
                   Floor price
@@ -41,7 +94,8 @@ export default function CollectionHeader() {
               </div>
               <div className="collection-header__column">
                 <span className="collection-header__column__data">
-                  <span className="semibold">0.5154</span> ETH
+                  <span className="semibold">{selectedCollection.bestOffer}</span>{" "}
+                  ETH
                 </span>
                 <span className="collection-header__column__label">
                   Best offer
@@ -49,13 +103,13 @@ export default function CollectionHeader() {
               </div>
               <div className="collection-header__column">
                 <span className="collection-header__column__data">
-                  <span className="semibold">1%</span>
+                  <span className="semibold">{selectedCollection.listed}%</span>
                 </span>
                 <span className="collection-header__column__label">Listed</span>
               </div>
               <div className="collection-header__column">
                 <span className="collection-header__column__data">
-                  <span className="semibold">6,452 (32%)</span>
+                  <span className="semibold">{selectedCollection.owners}</span>
                 </span>
                 <span className="collection-header__column__label">
                   Owners (Unique)
