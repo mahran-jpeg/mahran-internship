@@ -1,4 +1,4 @@
-import { faEye } from "@fortawesome/free-regular-svg-icons";
+
 import { faShoppingBag } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
@@ -23,6 +23,16 @@ export default function CollectionItems({
     }
   }
   const [visibleCount, setVisibleCount] = useState(11);
+  const [sort, setSort] = useState("");
+
+  function sortItems() {
+    if (sort === "HIGH_TO_LOW") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => b.price - a.price));
+    } else if (sort === "LOW_TO_HIGH") {
+      setSelectedItems(selectedItems.slice().sort((a, b) => a.price - b.price));
+    }
+  }
+  
   const loadMore = () => {
     setVisibleCount((prevCount) => prevCount + 6);
   };
@@ -48,52 +58,23 @@ export default function CollectionItems({
           </div>
 
         </div>
-     ) ));
+      ));
   };
-  useEffect(() => {
-    sortItems();
-  }, [sort]);
-
-  async function getData() {
-    try {
-      const { data } = await axios.get(
-        `https://remote-internship-api-production.up.railway.app/item/${id}`
-      );
-      if (data === "False") {
-        setItemDetails({});
-      } else {
-        console.log(setItemDetails(data.data));
-      }
-    } catch (error) {
-      setItemDetails({});
-      console.error("Error fetching data:", error);
-    }
-  }
-  useEffect(() => {
-    getData();
-  }, []);
- 
+  useEffect(()=>{
+sortItems()
+  },[sort])
   return (
     <section id="collection-items">
       <div className="row collection-items__row">
         <div className="collection-items__header">
           <div className="collection-items__header__left">
-          {loading ? (
-    <Skeleton width="120px" height="16px" borderRadius="4px" />
-  ) : (
-    <span className="collection-items__header__live">
-      <div className="green-pulse"></div>
-      Live
-    </span>
-  )}
-
-  {loading ? (
-    <Skeleton width="120px" height="16px" borderRadius="4px" />
-  ) : (
-    <span className="collection-items__header__results">
-      {selectedItems.length} results
-    </span>
-  )}
+            <span className="collection-items__header__live">
+              <div className="green-pulse"></div>
+              Live
+            </span>
+            <span className="collection-items__header__results">
+             {selectedItems.length}{' '}results
+            </span>
           </div>
           <select
             value={sort}
